@@ -6,4 +6,5 @@ dependencies:
   - mlflow
   - cloudpickle==1.2.2
   - scikit-learn==0.21.3
+  - google-cloud-storage
 name: mlflow-env
