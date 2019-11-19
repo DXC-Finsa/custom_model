@@ -1,0 +1,10 @@
+name: custom_model
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters:
+      n: {type: int, default: 5}
+    command: "python main.py {n}"
+ 
