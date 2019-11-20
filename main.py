@@ -53,3 +53,4 @@ with mlflow.start_run():
     mlflow.pyfunc.log_model(artifact_path=model_path, python_model=custom_model, conda_env="conda.yaml")
 
     print("Model saved in run: {}".format(mlflow.active_run().info.run_uuid))
+    print("Serve model: {}".format("·"))
