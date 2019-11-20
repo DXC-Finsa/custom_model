@@ -15,7 +15,7 @@ class KNN_Customized(mlflow.pyfunc.PythonModel):
         train_x = preprocess(train_x)
         self.knn_clf.fit(train_x, train_y)
 
-    def predict(self, context, model_input):
+    def predict(self, model_input):
         model_input = preprocess(model_input)
         predicted_target = self.knn_clf.predict(model_input)
         predicted_target = postprocess(predicted_target)
