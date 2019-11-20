@@ -15,9 +15,9 @@ def load_data():
     train, test = train_test_split(data)
     
     # The predicted column is "quality" which is a scalar from [3, 9]
-    train_x = train.drop(["target"], axis=1)
-    test_x = test.drop(["target"], axis=1)
-    train_y = train[["target"]]
-    test_y = test[["target"]]
+    train_x = np.array(train.drop(["target"], axis=1))
+    test_x = np.array(test.drop(["target"], axis=1))
+    train_y = np.array(train[["target"]]).reshape(-1)
+    test_y = np.array(test[["target"]]).reshape(-1)
 
     return train_x, test_x, train_y, test_y

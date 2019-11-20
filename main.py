@@ -1,4 +1,4 @@
-import sys
+import sys, time
 
 import mlflow
 import mlflow.pyfunc
@@ -17,9 +17,11 @@ n = int(sys.argv[1]) if len(sys.argv) > 1 else 5
 train_x, test_x, train_y, test_y = load_data()
 
 # Construct and train the model
+start_time = time.time()
 model_path = "custom_knn_conda"
 custom_model = KNN_Customized(n=n)
 custom_model.fit(train_x, train_y)
+print("Model trained. Train time: {} s".format(time.time() - start_time))
 
 # Guardamos el modelo en local y cargamos el contexto para poder evaluarlo
 #mlflow.pyfunc.save_model(path=model_path, python_model=custom_model)
@@ -29,13 +31,25 @@ custom_model.fit(train_x, train_y)
 pred = custom_model.predict(test_x)
 acc, prec, f1 = eval_metrics(test_y, pred)
 
-# Log training parameters
-mlflow.log_param("n", n)
+with mlflow.start_run():
+    # Log training parameters
+    mlflow.log_param("n", n)
 
-# Log metrics
-mlflow.log_metric("accuracy", acc)
-mlflow.log_metric("precision", prec)
-mlflow.log_metric("f1_score", f1)
+    # Log metrics
+    mlflow.log_metric("accuracy", acc)
+    mlflow.log_metric("precision", prec)
+    mlflow.log_metric("f1_score", f1)
 
-# Log the model
-mlflow.pyfunc.log_model(artifact_path=model_path, python_model=custom_model, conda_env="conda.yaml")
+    print("  knn model no of neighbors:", n)
+    print("  accuracy: %s" % acc)
+    print("  precision score: %s" % prec)
+    print("  f1 score: %s" % f1)
+
+    # Set tags
+    mlflow.set_tags({'pipeline':'norm + dummie',
+                     'algorithm':'knn'})
+
+    # Log the model
+    mlflow.pyfunc.log_model(artifact_path=model_path, python_model=custom_model, conda_env="conda.yaml")
+
+    print("Model saved in run: {}".format(mlflow.active_run().info.run_uuid))
